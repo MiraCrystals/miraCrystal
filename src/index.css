@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #f6f8f6 0%, #faf9f7 100%);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+  
+  .font-handwritten {
+    font-family: 'Caveat', cursive;
+  }
+}
+
+@layer utilities {
+  .animate-wave {
+    animation: wave 8s ease-in-out infinite;
+  }
+  
+  @keyframes wave {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-25px);
+    }
+  }
+  
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+  
+  .bg-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  }
+}
+
+/* Enhanced Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(180deg, #f6f8f6, #e3e8e3);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #5a7a5a, #456145);
+  border-radius: 6px;
+  border: 2px solid #f6f8f6;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #456145, #374d37);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Selection styling */
+::selection {
+  background-color: rgba(90, 122, 90, 0.3);
+  color: #2d3f2d;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #5a7a5a;
+  outline-offset: 2px;
+}
+
+/* Mystical glow effects */
+.mystical-glow {
+  filter: drop-shadow(0 0 10px rgba(90, 122, 90, 0.3));
+}
+
+.golden-glow {
+  filter: drop-shadow(0 0 15px rgba(217, 119, 6, 0.4));
+}
+
+/* Text shadow utilities */
+.text-shadow-soft {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text-shadow-glow {
+  text-shadow: 0 0 20px rgba(90, 122, 90, 0.3);
+}
+
+/* Backdrop blur utilities */
+.backdrop-blur-xs {
+  backdrop-filter: blur(2px);
+}
+
+/* Animation delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-1000 { animation-delay: 1s; }
+
+/* Spiritual loading animation */
+@keyframes spiritual-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+.spiritual-pulse {
+  animation: spiritual-pulse 2s ease-in-out infinite;
+}
