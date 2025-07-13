@@ -116,7 +116,7 @@ const Contact = () => {
                       Sacred Correspondence
                     </div>
                     <div className="text-sage-600 font-sans">
-                      hello@mayracrystals.com
+                      miracrystals365@gmail.com
                     </div>
                   </div>
 
