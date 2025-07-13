@@ -23,7 +23,7 @@ const handleSubmit = async (e) => {
 
   try {
     const res = await fetch(
-      `http://miracrystal-backend.onrender.com/api/contact`,
+      `https://miracrystal-backend.onrender.com/api/contact`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

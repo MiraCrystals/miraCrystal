@@ -15,7 +15,7 @@ const FeaturedProducts = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        `http://miracrystal-backend.onrender.com/api/product/getAllProducts`
+        `https://miracrystal-backend.onrender.com/api/product/getAllProducts`
       );
       const data = await res.json();
       setProducts(data);

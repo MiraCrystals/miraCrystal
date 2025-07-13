@@ -20,7 +20,7 @@ const AdminProducts = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        `http://miracrystal-backend.onrender.com/api/product/getAllProducts`
+        `https://miracrystal-backend.onrender.com/api/product/getAllProducts`
       );
       const data = await res.json();
       setProducts(data);
@@ -68,8 +68,8 @@ const AdminProducts = () => {
 
     try {
       const url = isEditing
-        ? `http://miracrystal-backend.onrender.com/api/product/update/${editId}`
-        : `http://miracrystal-backend.onrender.com/api/product/create`;
+        ? `https://miracrystal-backend.onrender.com/api/product/update/${editId}`
+        : `https://miracrystal-backend.onrender.com/api/product/create`;
 
       const method = isEditing ? "PUT" : "POST";
 

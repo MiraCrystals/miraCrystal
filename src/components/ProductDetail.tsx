@@ -20,7 +20,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `http://miracrystal-backend.onrender.com/api/product/${productId}`
+          `https://miracrystal-backend.onrender.com/api/product/${productId}`
         );
         const data = await res.json();
         if (res.ok) {

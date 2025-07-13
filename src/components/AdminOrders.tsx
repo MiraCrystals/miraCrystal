@@ -22,7 +22,7 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       const res = await axios.get(
-        `http://miracrystal-backend.onrender.com/api/order/admin/orders`
+        `https://miracrystal-backend.onrender.com/api/order/admin/orders`
       );
       setOrders(res.data);
     } catch (err) {
@@ -35,7 +35,7 @@ const AdminOrders = () => {
   const updateStatus = async (orderId: string, newStatus: string) => {
     try {
       await axios.put(
-        `http://miracrystal-backend.onrender.com/api/order/admin/orders/${orderId}/status`,
+        `https://miracrystal-backend.onrender.com/api/order/admin/orders/${orderId}/status`,
         {
           status: newStatus,
         }

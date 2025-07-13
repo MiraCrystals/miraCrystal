@@ -52,7 +52,7 @@ const CartPage = () => {
   const handleCOD = async () => {
     try {
       const response = await fetch(
-        `http://miracrystal-backend.onrender.com/api/order/place-cod-order`,
+        `https://miracrystal-backend.onrender.com/api/order/place-cod-order`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
