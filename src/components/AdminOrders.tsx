@@ -1,5 +1,5 @@
 // AdminOrders.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 interface Order {
@@ -13,6 +13,8 @@ interface Order {
   createdAt: string;
 }
 
+const apiUrl = import.meta.env.BASE_URLL;
+
 const AdminOrders = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       const res = await axios.get(
-        "${process.env.BASE_URL}/api/order/admin/orders"
+        `http://miracrystal-backend.onrender.com/api/order/admin/orders`
       );
       setOrders(res.data);
     } catch (err) {
@@ -33,7 +35,7 @@ const AdminOrders = () => {
   const updateStatus = async (orderId: string, newStatus: string) => {
     try {
       await axios.put(
-        `${process.env.BASE_URL}/api/order/admin/orders/${orderId}/status`,
+        `http://miracrystal-backend.onrender.com/api/order/admin/orders/${orderId}/status`,
         {
           status: newStatus,
         }

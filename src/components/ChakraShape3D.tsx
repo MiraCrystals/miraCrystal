@@ -1,5 +1,5 @@
 // ChakraShape3D.tsx
-import React from "react";
+
 import { useFrame } from "@react-three/fiber";
 
 const ChakraShape3D = ({ index, color }: { index: number; color: string }) => {

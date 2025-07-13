@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ShoppingCart, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useCart } from "./CartContext";
+
+const apiUrl = import.meta.env.BASE_URLL;
 
 const ProductDetail = () => {
   const { productId } = useParams(); // this should be the MongoDB ID
@@ -18,7 +20,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const res = await fetch(
-          `${process.env.BASE_URL}/api/product/${productId}`
+          `http://miracrystal-backend.onrender.com/api/product/${productId}`
         );
         const data = await res.json();
         if (res.ok) {

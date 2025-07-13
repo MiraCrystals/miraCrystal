@@ -1,9 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ShoppingCart, Star, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const apiUrl = import.meta.env.BASE_URLL;
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +15,7 @@ const FeaturedProducts = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        `${process.env.BASE_URL}/api/product/getAllProducts`
+        `http://miracrystal-backend.onrender.com/api/product/getAllProducts`
       );
       const data = await res.json();
       setProducts(data);

@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -8,6 +7,8 @@ import {
   Heart,
   Sparkles,
 } from "lucide-react";
+
+const apiUrl = import.meta.env.BASE_URLL;
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -21,11 +22,14 @@ const handleSubmit = async (e) => {
   };
 
   try {
-    const res = await fetch(`${process.env.BASE_URL}/api/contact`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const res = await fetch(
+      `http://miracrystal-backend.onrender.com/api/contact`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
 
     const result = await res.json();
     alert(result.message);

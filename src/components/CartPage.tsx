@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useCart } from "./CartContext";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -9,6 +9,8 @@ declare global {
     Razorpay: any;
   }
 }
+
+const apiUrl = import.meta.env.BASE_URLL;
 
 const CartPage = () => {
   const { cart, clearCart } = useCart();
@@ -50,7 +52,7 @@ const CartPage = () => {
   const handleCOD = async () => {
     try {
       const response = await fetch(
-        `${process.env.BASE_URL}/api/order/place-cod-order`,
+        `http://miracrystal-backend.onrender.com/api/order/place-cod-order`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

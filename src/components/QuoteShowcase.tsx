@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const crystalQuotes = [
   {
@@ -7,43 +7,43 @@ const crystalQuotes = [
     quote: "Peace comes from within. Do not seek it without.",
     color: "from-purple-400 to-purple-600",
     chakra: "Crown",
-    energy: "Spiritual Awakening"
+    energy: "Spiritual Awakening",
   },
   {
     crystal: "Rose Quartz",
     quote: "Love yourself first and everything else falls into line.",
     color: "from-pink-400 to-rose-500",
     chakra: "Heart",
-    energy: "Unconditional Love"
+    energy: "Unconditional Love",
   },
   {
     crystal: "Clear Quartz",
     quote: "Clarity of mind brings clarity of purpose.",
     color: "from-gray-200 to-gray-400",
     chakra: "Crown",
-    energy: "Amplification"
+    energy: "Amplification",
   },
   {
     crystal: "Citrine",
     quote: "Abundance flows to those who believe in their worth.",
     color: "from-yellow-400 to-orange-500",
     chakra: "Solar Plexus",
-    energy: "Manifestation"
+    energy: "Manifestation",
   },
   {
     crystal: "Green Aventurine",
     quote: "Growth begins at the end of your comfort zone.",
     color: "from-green-400 to-emerald-500",
     chakra: "Heart",
-    energy: "Emotional Healing"
+    energy: "Emotional Healing",
   },
   {
     crystal: "Black Tourmaline",
     quote: "Protection comes from inner strength and grounded energy.",
     color: "from-gray-800 to-black",
     chakra: "Root",
-    energy: "Protection"
-  }
+    energy: "Protection",
+  },
 ];
 
 const QuoteShowcase = () => {
@@ -52,7 +52,7 @@ const QuoteShowcase = () => {
 
   useEffect(() => {
     if (!isAutoPlaying) return;
-    
+
     const interval = setInterval(() => {
       setCurrentQuote((prev) => (prev + 1) % crystalQuotes.length);
     }, 4000);
@@ -61,7 +61,9 @@ const QuoteShowcase = () => {
   }, [isAutoPlaying]);
 
   return (
-    <section id="quotes" className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section
+      id="quotes"
+      className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0">
         <motion.div
@@ -87,13 +89,13 @@ const QuoteShowcase = () => {
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-20"
-        >
+          className="text-center mb-20">
           <h2 className="text-5xl md:text-6xl font-serif font-bold text-sage-800 mb-8">
             Sacred Wisdom
           </h2>
           <p className="text-xl text-sage-600 max-w-3xl mx-auto font-sans">
-            Each crystal holds ancient wisdom waiting to guide your spiritual journey
+            Each crystal holds ancient wisdom waiting to guide your spiritual
+            journey
           </p>
         </motion.div>
 
@@ -103,13 +105,11 @@ const QuoteShowcase = () => {
           <motion.div
             className="absolute z-20 w-32 h-32 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-2xl"
             animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          >
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
             <motion.div
               className="text-4xl"
               animate={{ rotate: -360 }}
-              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            >
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
               🕉️
             </motion.div>
           </motion.div>
@@ -119,15 +119,15 @@ const QuoteShowcase = () => {
             {crystalQuotes.map((item, index) => {
               const angle = (index * 360) / crystalQuotes.length;
               const isActive = index === currentQuote;
-              
+
               return (
                 <motion.div
                   key={index}
                   className="absolute w-24 h-24 cursor-pointer"
                   style={{
-                    left: '50%',
-                    top: '50%',
-                    transformOrigin: '12px 12px',
+                    left: "50%",
+                    top: "50%",
+                    transformOrigin: "12px 12px",
                   }}
                   animate={{
                     rotate: angle - (currentQuote * 360) / crystalQuotes.length,
@@ -138,21 +138,19 @@ const QuoteShowcase = () => {
                     setCurrentQuote(index);
                     setIsAutoPlaying(false);
                     setTimeout(() => setIsAutoPlaying(true), 8000);
-                  }}
-                >
+                  }}>
                   <motion.div
                     className={`w-full h-full rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg relative overflow-hidden`}
                     whileHover={{ scale: 1.1 }}
                     animate={{
-                      boxShadow: isActive 
-                        ? '0 0 30px rgba(217, 119, 6, 0.6)' 
-                        : '0 4px 15px rgba(0, 0, 0, 0.2)',
-                    }}
-                  >
+                      boxShadow: isActive
+                        ? "0 0 30px rgba(217, 119, 6, 0.6)"
+                        : "0 4px 15px rgba(0, 0, 0, 0.2)",
+                    }}>
                     <div className="text-white font-bold text-sm text-center px-2">
-                      {item.crystal.split(' ')[0]}
+                      {item.crystal.split(" ")[0]}
                     </div>
-                    
+
                     {isActive && (
                       <motion.div
                         className="absolute inset-0 border-4 border-gold-400 rounded-full"
@@ -177,16 +175,14 @@ const QuoteShowcase = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -50, scale: 0.8 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="absolute top-full mt-16 text-center max-w-2xl"
-            >
+              className="absolute top-full mt-16 text-center max-w-2xl">
               <motion.blockquote
                 className="text-2xl md:text-3xl font-serif italic text-sage-800 mb-6 leading-relaxed"
                 animate={{ opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
+                transition={{ duration: 3, repeat: Infinity }}>
                 "{crystalQuotes[currentQuote].quote}"
               </motion.blockquote>
-              
+
               <div className="space-y-2">
                 <h3 className="text-xl font-sans font-bold text-gold-600">
                   {crystalQuotes[currentQuote].crystal}
@@ -212,14 +208,15 @@ const QuoteShowcase = () => {
                 setTimeout(() => setIsAutoPlaying(true), 8000);
               }}
               className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                index === currentQuote ? 'bg-gold-500' : 'bg-sage-300'
+                index === currentQuote ? "bg-gold-500" : "bg-sage-300"
               }`}
               whileHover={{ scale: 1.2 }}
               animate={{
                 scale: index === currentQuote ? 1.2 : 1,
-                boxShadow: index === currentQuote 
-                  ? '0 0 15px rgba(217, 119, 6, 0.5)' 
-                  : 'none',
+                boxShadow:
+                  index === currentQuote
+                    ? "0 0 15px rgba(217, 119, 6, 0.5)"
+                    : "none",
               }}
             />
           ))}

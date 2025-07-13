@@ -1,6 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+
+const apiUrl = import.meta.env.BASE_URLL;
 
 const AdminProducts = () => {
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +20,7 @@ const AdminProducts = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        `${process.env.BASE_URL}/api/product/getAllProducts`
+        `http://miracrystal-backend.onrender.com/api/product/getAllProducts`
       );
       const data = await res.json();
       setProducts(data);
@@ -66,8 +68,8 @@ const AdminProducts = () => {
 
     try {
       const url = isEditing
-        ? `${process.env.BASE_URL}/api/product/update/${editId}`
-        : `${process.env.BASE_URL}/api/product/create`;
+        ? `http://miracrystal-backend.onrender.com/api/product/update/${editId}`
+        : `http://miracrystal-backend.onrender.com/api/product/create`;
 
       const method = isEditing ? "PUT" : "POST";
 
@@ -98,12 +100,9 @@ const AdminProducts = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(
-        `${process.env.BASE_URL}/api/product/delete/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      const res = await fetch(`${apiUrl}/api/product/delete/${id}`, {
+        method: "DELETE",
+      });
       const result = await res.json();
       console.log("Deleted:", result);
       fetchProducts();
