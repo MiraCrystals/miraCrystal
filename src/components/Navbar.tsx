@@ -62,11 +62,6 @@ const Navbar = () => {
               {item}
             </button>
           ))}
-          <Link
-            to="/admin"
-            className="text-sage-700 hover:text-sage-900 font-medium transition">
-            Admin
-          </Link>
 
           <Link to="/cart" className="relative">
             <ShoppingCart className="w-6 h-6 text-sage-700 hover:text-sage-900" />
