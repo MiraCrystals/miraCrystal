@@ -39,7 +39,7 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center text-red-600 text-xl">
-        Loading or product not found.
+        
       </div>
     );
   }
