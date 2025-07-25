@@ -71,7 +71,7 @@ const Contact = () => {
                 </a>
 
                 <a
-                  href="https://wa.me/1234567890"
+                  href="https://wa.me/9371029170"
                   className="flex items-center space-x-6 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-xl transition-transform duration-300 hover:scale-105">
                   <div className="bg-green-100 p-4 rounded-full">
                     <MessageCircle className="h-6 w-6 text-green-600" />
