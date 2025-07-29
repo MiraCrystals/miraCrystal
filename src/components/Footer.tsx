@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Sparkles, Heart, Instagram, Facebook, Twitter } from "lucide-react";
+import {
+  Sparkles,
+  Heart,
+  Instagram,
+  Facebook,
+  Twitter,
+  ShoppingCart,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const [mantraWords, setMantraWords] = useState<string[]>([]);
@@ -112,6 +120,12 @@ const Footer = () => {
             <Heart className="h-5 w-5 text-rose-400 fill-current" />
             <span>for your sacred journey</span>
             <Sparkles className="h-4 w-4 text-gold-400" />
+            <Link
+              to="/admin"
+              className="flex items-center gap-2 mt-2 text-white">
+              <ShoppingCart className="w-5 h-5" />
+              Admin
+            </Link>
           </p>
         </div>
       </div>
