@@ -7,7 +7,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (username === 'admin' && password === 'admin123') {
+    if (username === 'Dradmin' && password === 'DrUnmesh@123') {
       localStorage.setItem('isAdmin', 'true');
       navigate('/admin/dashboard');
     } else {
