@@ -12,20 +12,36 @@ const AdminProducts = () => {
     price: "",
     description: "",
     moreDetails: "",
-    image: null, // Changed from photo to image for file upload
-    imagePreview: "", // For showing preview
+    image: null,
+    imagePreview: "",
   });
   const [isUploading, setIsUploading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(
-        `https://miracrystal-backend.onrender.com/api/product`
-      );
-      const data = await res.json();
-      setProducts(data);
+      setLoading(true);
+      setError(null);
+      const res = await fetch(`https://miracrystal-backend.onrender.com/api/product`);
+
+      if (!res.ok) {
+        throw new Error(`Failed to fetch products: ${res.status}`);
+      }
+
+      const response = await res.json();
+
+      if (response.success) {
+        setProducts(response.data || []);
+      } else {
+        throw new Error(response.error || "Failed to load products");
+      }
     } catch (err) {
       console.error("Failed to fetch products:", err);
+      setError(err.message);
+      setProducts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,12 +88,13 @@ const AdminProducts = () => {
       description: product.description,
       moreDetails: product.moreDetails || "",
       image: null,
-      imagePreview: product.image.url,
+      // Handle both image.url and photo fields
+      imagePreview: product.image?.url || product.photo || "",
     });
     setShowModal(true);
   };
 
-  const uploadImageToCloudinary = async (file: File) => {
+  const uploadImageToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "check112233");
@@ -109,14 +126,13 @@ const AdminProducts = () => {
     try {
       let imageData = null;
 
-      // Upload new image if present
       if (formData.image) {
         imageData = await uploadImageToCloudinary(formData.image);
       }
 
       const productData = {
         name: formData.name,
-        price: formData.price,
+        price: Number(formData.price),
         description: formData.description,
         moreDetails: formData.moreDetails,
         ...(imageData && {
@@ -130,7 +146,6 @@ const AdminProducts = () => {
       const url = isEditing
         ? `https://miracrystal-backend.onrender.com/api/product/update/${editId}`
         : `https://miracrystal-backend.onrender.com/api/product`;
-      //https://miracrystal-backend.onrender.com
       const method = isEditing ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -140,24 +155,14 @@ const AdminProducts = () => {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to save product");
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to save product");
       }
 
       const result = await res.json();
       console.log("Saved:", result);
 
       setShowModal(false);
-      setEditId(null);
-      setIsEditing(false);
-      setFormData({
-        name: "",
-        price: "",
-        description: "",
-        moreDetails: "",
-        image: null,
-        imagePreview: "",
-      });
-
       fetchProducts();
     } catch (error) {
       console.error("Error:", error);
@@ -182,14 +187,35 @@ const AdminProducts = () => {
         throw new Error("Failed to delete product");
       }
 
-      const result = await res.json();
-      console.log("Deleted:", result);
       fetchProducts();
     } catch (err) {
       console.error("Delete error:", err);
       alert(err.message || "An error occurred while deleting");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-sage-50 flex items-center justify-center">
+        <div className="text-sage-800">Loading products...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-sage-50 flex items-center justify-center">
+        <div className="text-red-600">
+          Error: {error}
+          <button
+            onClick={fetchProducts}
+            className="ml-4 bg-sage-600 text-white px-4 py-2 rounded">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-sage-50 py-20 px-6">
@@ -223,9 +249,12 @@ const AdminProducts = () => {
                   <td className="p-3">₹{prod.price}</td>
                   <td className="p-3">
                     <img
-                      src={prod.image?.url || prod.photo} // Fallback to old photo field if needed
+                      src={prod.image?.url || prod.photo}
                       alt={prod.name}
                       className="w-16 h-16 object-cover rounded"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.jpg";
+                      }}
                     />
                   </td>
                   <td className="p-3 flex gap-2">
