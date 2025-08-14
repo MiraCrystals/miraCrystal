@@ -101,11 +101,7 @@ const FeaturedProducts = () => {
               onClick={() => navigate(`/product/${product._id}`)}>
               <div className="relative overflow-hidden h-64">
                 <img
-<<<<<<< HEAD
                   src={product.imageUrl}
-=======
-                  src={product.photo || "/placeholder.jpg"}
->>>>>>> cd950a86a6b1766996cb17df678b4ccc3a250172
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
