@@ -6,48 +6,92 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useCart } from "./CartContext";
 
-const apiUrl = import.meta.env.BASE_URLL;
-
 const ProductDetail = () => {
-  const { productId } = useParams(); // this should be the MongoDB ID
+  const { productId } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch product
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+        setLoading(true);
+        setError(null);
+
         const res = await fetch(
           `https://miracrystal-backend.onrender.com/api/product/${productId}`
         );
-        const data = await res.json();
-        if (res.ok) {
-          setProduct(data);
+
+        if (!res.ok) {
+          throw new Error(`Failed to fetch product: ${res.status}`);
+        }
+
+        const response = await res.json();
+
+        if (response.success) {
+          // Normalize the product data structure
+          const normalizedProduct = {
+            ...response.data,
+            // Handle both image.url and photo fields
+            imageUrl:
+              response.data.image?.url ||
+              response.data.photo ||
+              "/placeholder.jpg",
+            name: response.data.name || "Unnamed Product",
+            description:
+              response.data.description || "No description available",
+            price: response.data.price || 0,
+          };
+          setProduct(normalizedProduct);
         } else {
-          console.error("Error:", data.error);
+          throw new Error(response.error || "Product not found");
         }
       } catch (err) {
-        console.error("Failed to fetch product:", err);
+        console.error("Error fetching product:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProduct();
   }, [productId]);
 
-  if (!product) {
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({ ...product, quantity });
+      setTimeout(() => navigate("/cart"), 150);
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-600 text-xl">
-        Loading or product not found.
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-xl text-sage-600">
+          Loading sacred crystal details...
+        </div>
       </div>
     );
   }
 
-  const handleAddToCart = () => {
-    addToCart({ ...product, quantity });
-    setTimeout(() => navigate("/cart"), 150);
-  };
+  if (error || !product) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="text-red-600 text-xl">
+          {error || "Product not found"}
+        </div>
+        <button
+          onClick={() => navigate("/products")}
+          className="bg-sage-600 text-white px-4 py-2 rounded hover:bg-sage-700 transition">
+          Browse Products
+        </button>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -55,14 +99,19 @@ const ProductDetail = () => {
       <div className="pt-28 pb-16 px-6 bg-gradient-to-br from-sage-50 via-white to-gold-50 min-h-screen">
         <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-2xl grid grid-cols-1 md:grid-cols-2 overflow-hidden">
           {/* Image */}
-          <motion.img
-            src={product.photo}
-            alt={product.name}
-            className="w-full h-[450px] object-cover"
-            initial={{ opacity: 0.7, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          />
+          <div className="relative h-[450px]">
+            <motion.img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              initial={{ opacity: 0.7, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6 }}
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.jpg";
+              }}
+            />
+          </div>
 
           {/* Info */}
           <div className="p-8 flex flex-col justify-between">
@@ -72,7 +121,7 @@ const ProductDetail = () => {
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
-                    className="h-4 w-4 text-gold-400 fill-current"
+                    className="h-4 w-4 text-yellow-400 fill-current"
                   />
                 ))}
               </div>
@@ -93,6 +142,13 @@ const ProductDetail = () => {
               <p className="text-sage-600 mb-6 font-handwritten text-lg">
                 {product.description}
               </p>
+
+              {product.moreDetails && (
+                <div className="mb-6 p-4 bg-sage-50 rounded-lg">
+                  <h3 className="font-semibold text-sage-800 mb-2">Details:</h3>
+                  <p className="text-sage-700">{product.moreDetails}</p>
+                </div>
+              )}
 
               <div className="space-y-4 text-sm text-sage-700">
                 <div>
@@ -126,7 +182,7 @@ const ProductDetail = () => {
             <div className="mt-8 flex flex-col gap-4">
               <div className="flex items-center space-x-6">
                 <span className="text-3xl font-bold text-sage-800">
-                  ₹{product.price}
+                  ₹{product.price.toLocaleString()}
                 </span>
                 <div className="flex items-center gap-2">
                   <label htmlFor="qty" className="text-sm text-sage-700">
@@ -134,10 +190,11 @@ const ProductDetail = () => {
                   </label>
                   <input
                     type="number"
+                    id="qty"
                     min="1"
                     value={quantity}
                     onChange={(e) =>
-                      setQuantity(Math.max(1, parseInt(e.target.value)))
+                      setQuantity(Math.max(1, parseInt(e.target.value || "1")))
                     }
                     className="w-16 px-2 py-1 border border-sage-300 rounded"
                   />
@@ -148,7 +205,7 @@ const ProductDetail = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleAddToCart}
-                className="bg-gradient-to-r from-sage-600 to-sage-700 text-white px-6 py-3 rounded-full flex items-center justify-center space-x-2 shadow-lg hover:shadow-2xl">
+                className="bg-gradient-to-r from-sage-600 to-sage-700 text-white px-6 py-3 rounded-full flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transition-all">
                 <ShoppingCart className="h-5 w-5" />
                 <span>Add to Cart</span>
               </motion.button>

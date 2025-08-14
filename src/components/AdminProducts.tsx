@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 
-const apiUrl = import.meta.env.BASE_URLL;
-
 const AdminProducts = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -14,8 +12,10 @@ const AdminProducts = () => {
     price: "",
     description: "",
     moreDetails: "",
-    photo: "",
+    image: null, // Changed from photo to image for file upload
+    imagePreview: "", // For showing preview
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const fetchProducts = async () => {
     try {
@@ -38,6 +38,18 @@ const AdminProducts = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+        imagePreview: URL.createObjectURL(file),
+      }));
+    }
+  };
+
   const openAddModal = () => {
     setIsEditing(false);
     setFormData({
@@ -45,7 +57,8 @@ const AdminProducts = () => {
       price: "",
       description: "",
       moreDetails: "",
-      photo: "",
+      image: null,
+      imagePreview: "",
     });
     setShowModal(true);
   };
@@ -58,26 +71,77 @@ const AdminProducts = () => {
       price: product.price,
       description: product.description,
       moreDetails: product.moreDetails || "",
-      photo: product.photo,
+      image: null,
+      imagePreview: product.image.url,
     });
     setShowModal(true);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const uploadImageToCloudinary = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "check112233");
 
     try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/dsijknivq/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Image upload failed");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsUploading(true);
+
+    try {
+      let imageData = null;
+
+      // Upload new image if present
+      if (formData.image) {
+        imageData = await uploadImageToCloudinary(formData.image);
+      }
+
+      const productData = {
+        name: formData.name,
+        price: formData.price,
+        description: formData.description,
+        moreDetails: formData.moreDetails,
+        ...(imageData && {
+          image: {
+            public_id: imageData.public_id,
+            url: imageData.secure_url,
+          },
+        }),
+      };
+
       const url = isEditing
         ? `https://miracrystal-backend.onrender.com/api/product/update/${editId}`
-        : `https://miracrystal-backend.onrender.com/api/product/create`;
-
+        : `https://miracrystal-backend.onrender.com/api/product`;
+      //https://miracrystal-backend.onrender.com
       const method = isEditing ? "PUT" : "POST";
 
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(productData),
       });
+
+      if (!res.ok) {
+        throw new Error("Failed to save product");
+      }
 
       const result = await res.json();
       console.log("Saved:", result);
@@ -90,24 +154,40 @@ const AdminProducts = () => {
         price: "",
         description: "",
         moreDetails: "",
-        photo: "",
+        image: null,
+        imagePreview: "",
       });
+
       fetchProducts();
     } catch (error) {
       console.error("Error:", error);
+      alert(error.message || "An error occurred");
+    } finally {
+      setIsUploading(false);
     }
   };
 
   const handleDelete = async (id) => {
+    if (!confirm("Are you sure you want to delete this product?")) return;
+
     try {
-      const res = await fetch(`${apiUrl}/api/product/delete/${id}`, {
-        method: "DELETE",
-      });
+      const res = await fetch(
+        `https://miracrystal-backend.onrender.com/api/product/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to delete product");
+      }
+
       const result = await res.json();
       console.log("Deleted:", result);
       fetchProducts();
     } catch (err) {
       console.error("Delete error:", err);
+      alert(err.message || "An error occurred while deleting");
     }
   };
 
@@ -143,7 +223,7 @@ const AdminProducts = () => {
                   <td className="p-3">₹{prod.price}</td>
                   <td className="p-3">
                     <img
-                      src={prod.photo}
+                      src={prod.image?.url || prod.photo} // Fallback to old photo field if needed
                       alt={prod.name}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -215,15 +295,29 @@ const AdminProducts = () => {
                 value={formData.moreDetails}
                 className="w-full p-2 border border-gray-300 rounded"
               />
-              <input
-                type="text"
-                name="photo"
-                placeholder="Image URL"
-                onChange={handleChange}
-                value={formData.photo}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
+
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Product Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                />
+                {formData.imagePreview && (
+                  <div className="mt-2">
+                    <img
+                      src={formData.imagePreview}
+                      alt="Preview"
+                      className="w-32 h-32 object-cover rounded"
+                    />
+                  </div>
+                )}
+              </div>
+
               <div className="flex justify-end gap-4 pt-4">
                 <button
                   type="button"
@@ -237,8 +331,13 @@ const AdminProducts = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-violet-600 text-white rounded hover:bg-violet-700">
-                  {isEditing ? "Update Product" : "Add Product"}
+                  disabled={isUploading}
+                  className="px-4 py-2 bg-violet-600 text-white rounded hover:bg-violet-700 disabled:bg-violet-400">
+                  {isUploading
+                    ? "Processing..."
+                    : isEditing
+                    ? "Update Product"
+                    : "Add Product"}
                 </button>
               </div>
             </form>
