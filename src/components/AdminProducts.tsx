@@ -20,7 +20,7 @@ const AdminProducts = () => {
   const fetchProducts = async () => {
     try {
       const res = await fetch(
-        `https://miracrystal-backend.onrender.com/api/product/getAllProducts`
+        `https://miracrystal-backend.onrender.com/api/product`
       );
       const data = await res.json();
       setProducts(data);
