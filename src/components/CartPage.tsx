@@ -81,7 +81,7 @@ const CartPage = () => {
 
   const handleRazorpay = () => {
     const options = {
-      key: "rzp_test_YourKeyHere", // Replace with real key
+      key: "rzp_live_g8Cnrm9Ai88cXm", // Replace with real key 
       amount: totalPrice * 100,
       currency: "INR",
       name: "Mira Crystals",
